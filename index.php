@@ -213,13 +213,13 @@ mb_internal_encoding("UTF-8");
         <h2 class="visually-hidden">Напишите нам</h2>
         <div class="overlay"></div>
         <div class="modal-wrapper">
-          <form action="https://echo.htmlacademy.ru" class="modal-form" method="post" id="form">
+          <form enctype="multipart/form-data" class="modal-form" id="fupForm">
             <fieldset class="modal-fieldset">
               <legend class="visually-hidden">Заполните простую форму и напишете нам</legend>
               <div class="modal-user-block">
                 <div class="modal-user-column">
-                  <label class="modal__label" for="username">Ваше имя:</label>
-                  <input class="modal__input field-text" id="username" name="username" placeholder="Имя Фамилия" type="text" required minlength="2">
+                  <label class="modal__label" for="name">Ваше имя:</label>
+                  <input class="modal__input field-text" id="name" name="name" placeholder="Имя Фамилия" type="text" required minlength="2">
                 </div>
                 <div class="modal-user-column">
                   <label class="modal__label" for="email">Ваш e-mail:</label>
@@ -230,9 +230,8 @@ mb_internal_encoding("UTF-8");
                 <label class="modal__label" for="massage">Текст письма:</label>
                 <textarea class="modal__input modal__massage-input" cols="30" id="massage" name="massage" placeholder="В свободной форме" rows="3"></textarea>
               </p>
-              <input type="file">
-              <input class="modal__submit-btn" type="submit" value="Отправить">
-              <a href="#" class="submit button">Загрузить файлы</a>
+              <input type="file" class="form-control" id="file" name="file" required/>
+              <input class="modal__submit-btn btn btn-danger submitBtn" type="submit" name="submit" value="Отправить">
               <h5 id="alert"></h5>
             </fieldset>
           </form>

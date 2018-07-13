@@ -58,7 +58,7 @@ $(function () {
       }
     },
     messages: {
-      username: {
+      name: {
         required: "Поле 'Имя' обязательно к заполнению",
         minlength: "Введите не менее 2-х символов в поле 'Имя'"
       },
@@ -72,57 +72,31 @@ $(function () {
 
 //files
 
-var files;
- 
-// Вешаем функцию на событие
-// Получим данные файлов и добавим их в переменную
- 
-$('input[type=file]').change(function(){
-    files = this.files;
-});
-
-$('.submit.button').click(function( event ){
-    event.stopPropagation(); // Остановка происходящего
-    event.preventDefault();  // Полная остановка происходящего
- 
-    // Создадим данные формы и добавим в них данные файлов из files
- 
-    var data = new FormData();
-    $.each( files, function( key, value ){
-        data.append( key, value );
-    });
- 
-    // Отправляем запрос
- 
-    $.ajax({
-        url: './submit.php?uploadfiles',
-        type: 'POST',
-        data: data,
-        cache: false,
-        dataType: 'json',
-        processData: false, // Не обрабатываем файлы (Don't process the files)
-        contentType: false, // Так jQuery скажет серверу что это строковой запрос
-        success: function( respond, textStatus, jqXHR ){
- 
-            // Если все ОК
- 
-            if( typeof respond.error === 'undefined' ){
-                // Файлы успешно загружены, делаем что нибудь здесь
- 
-                // выведем пути к загруженным файлам в блок '.ajax-respond'
- 
-                var files_path = respond.files;
-                var html = '';
-                $.each( files_path, function( key, val ){ html += val +'<br>'; } )
-                $('.ajax-respond').html( html );
+$(document).ready(function(e){
+    $("#fupForm").on('submit', function(e){
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: 'submit.php',
+            data: new FormData(this),
+            contentType: false,
+            cache: false,
+            processData:false,
+            beforeSend: function(){
+                $('.submitBtn').attr("disabled","disabled");
+                $('#fupForm').css("opacity",".5");
+            },
+            success: function(msg){
+                $('.statusMsg').html('');
+                if(msg == 'ok'){
+                    $('#fupForm')[0].reset();
+                    $('.statusMsg').html('<span style="font-size:18px;color:#34A853">Form data submitted successfully.</span>');
+                }else{
+                    $('.statusMsg').html('<span style="font-size:18px;color:#EA4335">Some problem occurred, please try again.</span>');
+                }
+                $('#fupForm').css("opacity","");
+                $(".submitBtn").removeAttr("disabled");
             }
-            else{
-                console.log('ОШИБКИ ОТВЕТА сервера: ' + respond.error );
-            }
-        },
-        error: function( jqXHR, textStatus, errorThrown ){
-            console.log('ОШИБКИ AJAX запроса: ' + textStatus );
-        }
+        });
     });
- 
 });

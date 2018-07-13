@@ -1,32 +1,28 @@
 <?php
- 
-// Здесь нужно сделать все проверки передаваемых файлов и вывести ошибки если нужно
- 
-// Переменная ответа
- 
-$data = array();
- 
-if( isset( $_GET['uploadfiles'] ) ){
-    $error = false;
-    $files = array();
- 
-    $uploaddir = './uploads/'; // . - текущая папка где находится submit.php
- 
-    // Создадим папку если её нет
- 
-    if( ! is_dir( $uploaddir ) ) mkdir( $uploaddir, 0777 );
- 
-    // переместим файлы из временной директории в указанную
-    foreach( $_FILES as $file ){
-        if( move_uploaded_file( $file['tmp_name'], $uploaddir . basename($file['name']) ) ){
-            $files[] = realpath( $uploaddir . $file['name'] );
-        }
-        else{
-            $error = true;
+if(!empty($_POST['name']) || !empty($_POST['email']) || !empty($_FILES['file']['name'])){
+    $uploadedFile = '';
+    if(!empty($_FILES["file"]["type"])){
+        $fileName = time().'_'.$_FILES['file']['name'];
+        $valid_extensions = array("jpeg", "jpg", "png");
+        $temporary = explode(".", $_FILES["file"]["name"]);
+        $file_extension = end($temporary);
+        if((($_FILES["hard_file"]["type"] == "image/png") || ($_FILES["file"]["type"] == "image/jpg") || ($_FILES["file"]["type"] == "image/jpeg")) && in_array($file_extension, $valid_extensions)){
+            $sourcePath = $_FILES['file']['tmp_name'];
+            $targetPath = "uploads/".$fileName;
+            if(move_uploaded_file($sourcePath,$targetPath)){
+                $uploadedFile = $fileName;
+            }
         }
     }
- 
-    $data = $error ? array('error' => 'Ошибка загрузки файлов.') : array('files' => $files );
- 
-    echo json_encode( $data );
+    
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    
+    //include database configuration file
+    include_once 'dbConfig.php';
+    
+    //insert form data in the database
+    $insert = $db->query("INSERT form_data (name,email,file_name) VALUES ('".$name."','".$email."','".$uploadedFile."')");
+    
+    echo $insert?'ok':'err';
 }
