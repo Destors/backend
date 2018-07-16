@@ -230,7 +230,7 @@ mb_internal_encoding("UTF-8");
                 <label class="modal__label" for="massage">Текст письма:</label>
                 <textarea class="modal__input modal__massage-input" cols="30" id="massage" name="massage" placeholder="В свободной форме" rows="3"></textarea>
               </p>
-              <input type="file" class="form-control" id="file" name="file" required/>
+              <input type="file" class="form-control" id="file" name="file"/>
               <input class="modal__submit-btn btn btn-danger submitBtn" type="submit" name="submit" value="Отправить">
               <h5 id="alert"></h5>
             </fieldset>
